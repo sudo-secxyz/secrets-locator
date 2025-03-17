@@ -23,16 +23,33 @@ def get_github_api_url(owner, repo):
 def find_secrets(text):
     # Common API key patterns
     api_key_patterns = [
-        r"\b(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)\s*[:-]\s*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
-        r"(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)[\s:-]*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
-        r"(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)",
+        # AWS Access Key ID (starts with AKIA followed by 16 alphanumeric characters)
+        r"AKIA[0-9A-Z]{16}",
+        # AWS Secret Access Key (40 alphanumeric characters)
+        r"[A-Za-z0-9/+=]{40}",
+        # AWS Session Token (starts with FwoGZX and is followed by other characters)
+        r"FwoGZX[A-Za-z0-9+/=]{80,}",
+        # GCP API Key (long alphanumeric string)
+        r"AIza[0-9A-Za-z_-]{35}",
+        # GitHub Personal Access Token (ghp_, gho_, or ghu_ followed by 36 alphanumeric characters)
+        r"gh[pou]_[0-9a-zA-Z]{36}",
+        # Azure account key in connection string format
+        r"DefaultEndpointsProtocol=https;AccountName=[a-zA-Z0-9]+;AccountKey=[a-zA-Z0-9+/=]{88}",
+        # Azure Account Key (a long alphanumeric string)
+        r"[a-zA-Z0-9+/=]{88}",
+        # okta api token
+        r"00o[a-zA-Z0-9]{32}",
+        # Okta Oauth token
+        r"[A-Za-z0-9]{100,}"
         r"sk_live_[a-zA-Z0-9]{24}",  # Stripe live key
         r"rk_live_[a-zA-Z0-9]{24}",  # Recurly live key
         r"pk_live_[a-zA-Z0-9]{24}",  # Stripe public key
         r"access_token\$[a-zA-Z0-9\-\_]+",
         r"gh_[a-zA-Z0-9]{40}",  # GitHub key
         r"[\s:-][a-zA-Z0-9]{25}",  # Okta key
-
+        r"\b(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)\s*[:-]\s*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
+        r"(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)[\s:-]*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
+        r"\b(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)",
     ]
     
     found_keys = []
