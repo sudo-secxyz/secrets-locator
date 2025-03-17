@@ -23,13 +23,16 @@ def get_github_api_url(owner, repo):
 def find_secrets(text):
     # Common API key patterns
     api_key_patterns = [
-        r"\b(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret)\s*[:-]\s*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
+        r"\b(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)\s*[:-]\s*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
+        r"(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)[\s:-]*['\"]?([a-zA-Z0-9\-_]+)['\"]?",
+        r"(?:API_KEY|API key|apikey|CLIENT_SECRET|CLIENT secret|client_secret|SECRET_KEY|SECRET_key|secret_key)",
         r"sk_live_[a-zA-Z0-9]{24}",  # Stripe live key
         r"rk_live_[a-zA-Z0-9]{24}",  # Recurly live key
         r"pk_live_[a-zA-Z0-9]{24}",  # Stripe public key
         r"access_token\$[a-zA-Z0-9\-\_]+",
         r"gh_[a-zA-Z0-9]{40}",  # GitHub key
-        r"[a-zA-Z0-9]{25}"  # Okta key
+        r"[\s:-][a-zA-Z0-9]{25}",  # Okta key
+
     ]
     
     found_keys = []
